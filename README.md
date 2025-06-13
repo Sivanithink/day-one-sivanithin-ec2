@@ -1,6 +1,6 @@
 # day-one-sivanithin-ec2
 
-## Deploying a Secure, Public Web Server on AWS
+## Deploying a Secure, Public Web Server on AWS(Class)
 
 ### Setup: AWS Key Pair
 
@@ -92,3 +92,142 @@ We see a page that says:
 **"Hello World from [your-instance's-private-hostname]"**
 
 ![Screenshot (67)](https://github.com/user-attachments/assets/450d9d26-4ad4-42e3-adae-59719e0aa2b8)
+
+
+
+
+
+# Day 1 DevOps AWS Assignment – Two-Tier Architecture(Take Home Assignment)
+
+## Assignment Title:
+Building a Two-Tier Web Application Infrastructure on AWS
+
+In this task, I had to build a basic two-tier architecture using AWS services. The setup includes a public-facing web server that handles user requests and a private database server that cannot be accessed from the internet. The main idea was to set up a secure and working environment with a VPC, subnets, route tables, security groups, and EC2 instances.
+
+---
+
+## Part 1: Network Foundation
+
+- Created a custom VPC named `day-one-sivanithin-two-tier-vpc` with CIDR block `10.10.0.0/16`.
+###VPC
+![Screenshot (78)](https://github.com/user-attachments/assets/5d2c923a-1a7e-43ac-8459-95d1e5bfe614)
+- Added two subnets:
+  - Public Subnet: `10.10.1.0/24`
+
+  - Private Subnet: `10.10.2.0/24`
+
+- Created an Internet Gateway and attached it to the VPC.
+![Screenshot (82)](https://github.com/user-attachments/assets/edf78a8a-1bf4-4e8e-8ca3-467a7489fce1)
+
+
+- Updated the main route table to send internet traffic (`0.0.0.0/0`) to the Internet Gateway and associated it only with the **public subnet**.
+
+- As a result, only the public subnet has internet access, while the private subnet remains isolated.
+
+###
+---
+
+## Part 2: Security Groups
+
+- **day-one-sivanithin-webapp-sg**:
+  - Allowed HTTP (port 80) from anywhere.
+  - Allowed SSH (port 22) from my IP only.
+
+- **day-one-sivanithin-database-sg**:
+  - Allowed MySQL/Aurora (port 3306) only from the webapp-sg security group.
+  - No internet access and no SSH allowed.
+
+
+This ensures only the Web Server can communicate with the Database on port 3306, and the DB is completely private.
+
+---
+
+## Part 3: EC2 Instances
+
+- Launched **Web Server** in the public subnet:
+  - t2.micro
+  - Assigned `day-one-sivanithin-webapp-sg`
+  - Public IP enabled
+  - Installed web server using user-data script
+![Screenshot (89)](https://github.com/user-attachments/assets/40a4b258-a83c-429b-94c2-0e5cb4e36a27)
+![Screenshot (86)](https://github.com/user-attachments/assets/b34cf62a-40c2-467c-a5c2-18b0bfb8d4b5)
+
+- Launched **DB Server** in the private subnet:
+  - t2.micro
+  - Assigned `day-one-sivanithin-database-sg`
+  - No public IP
+![Screenshot (90)](https://github.com/user-attachments/assets/bfbca8fc-30b0-43f9-a1b0-46ac36677792)
+
+---
+
+## Part 4: Verification & Observations
+
+- Accessed the Web Server from browser using its public IP – working fine.
+![Screenshot (91)](https://github.com/user-attachments/assets/74599ca6-ba15-4275-ac4b-3fa04252586f)
+
+- SSH into the Web Server using its public IP – successful.
+- From Web Server, tried to **ping** the private IP of the DB Server:
+  - This did **not work**, and I understood that this is due to ICMP not being allowed in the database security group.
+  - Ping uses ICMP, but we only allowed TCP port 3306.
+- Tried pinging `8.8.8.8` from the DB Server – **failed**, which is expected since it has no internet access.
+
+---
+
+## Important Note
+
+Even though pinging the DB Server didn’t work, it doesn't mean the connection to MySQL is blocked. It just means ICMP is not allowed (which is fine in production environments). The main thing is that port 3306 is accessible from the Web Server, which meets the assignment’s requirements.
+
+---
+
+## What I Learned
+
+- How to properly design a two-tier architecture using VPC, subnets, and EC2.
+- The importance of keeping the database private and only allowing necessary ports.
+- How security groups work and how to restrict traffic between resources.
+- Understood how ICMP is different from TCP, and why ping might not work but other protocols can.
+- Gained clarity on isolating networks and controlling access tightly.
+
+---
+
+## Deliverables
+
+1. Screenshot of EC2 instances list showing both Web and DB servers.
+
+![Screenshot (89)](https://github.com/user-attachments/assets/40a4b258-a83c-429b-94c2-0e5cb4e36a27)
+![Screenshot (90)](https://github.com/user-attachments/assets/bfbca8fc-30b0-43f9-a1b0-46ac36677792)
+2. Screenshot of `database-sg` showing port 3306 allowed only from `webapp-sg`.
+![Screenshot 2025-06-12 222019](https://github.com/user-attachments/assets/3976fe83-43fc-4e26-b5ea-9df8fb2d0bf7)
+
+![Screenshot (96)](https://github.com/user-attachments/assets/c934e27f-bc79-4740-aa7c-1f7f116546a8)
+
+3. Screenshot of terminal showing SSH access into Web Server and attempt to ping DB Server.
+## SSH Access and Ping Test from Web Server to DB Server
+
+In this step, I successfully connected to the Web Server using SSH from my local machine with the public IP. After logging into the Web Server, I tried to ping the private IP address of the DB Server to test the connection between the two servers.
+
+However, the ping command didn’t work as expected. I later understood that AWS blocks ICMP (ping) by default unless explicitly allowed in the Security Group. In this assignment, we only allowed MySQL (port 3306) traffic from the Web Server to the DB Server, not ICMP.
+
+Even though ping failed, it doesn't mean the connection between the servers is broken. In real setups, web servers usually connect to the database using the MySQL port, not ping. So the architecture is still correct — the Web Server can access the DB Server on the right port, and the DB Server stays private without direct internet access.
+
+4. Public IP of Web Server: 
+![Screenshot (89)](https://github.com/user-attachments/assets/3f4795c7-e009-4c37-baf2-291e36a9a78d)
+
+![Screenshot (88)](https://github.com/user-attachments/assets/c87fdc60-e623-4922-9f93-88b65534b5c0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
