@@ -93,8 +93,9 @@ We see a page that says:
 
 ![Screenshot (67)](https://github.com/user-attachments/assets/450d9d26-4ad4-42e3-adae-59719e0aa2b8)
 
-
-
+<!-- ============================ -->
+<!-- START OF TAKE-HOME ASSIGNMENT -->
+<!-- ============================ -->
 
 
 # Day 1 DevOps AWS Assignment – Two-Tier Architecture(Take Home Assignment)
@@ -113,8 +114,10 @@ In this task, I had to build a basic two-tier architecture using AWS services. T
 ![Screenshot (78)](https://github.com/user-attachments/assets/5d2c923a-1a7e-43ac-8459-95d1e5bfe614)
 - Added two subnets:
   - Public Subnet: `10.10.1.0/24`
+![Screenshot (80)](https://github.com/user-attachments/assets/9a46983a-9fe1-433b-b084-908add46a366)
 
   - Private Subnet: `10.10.2.0/24`
+![Screenshot (81)](https://github.com/user-attachments/assets/e450e467-8588-4f8b-b5f2-ff33a7f83fac)
 
 - Created an Internet Gateway and attached it to the VPC.
 ![Screenshot (82)](https://github.com/user-attachments/assets/edf78a8a-1bf4-4e8e-8ca3-467a7489fce1)
