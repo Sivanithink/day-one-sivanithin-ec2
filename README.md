@@ -93,6 +93,7 @@ We see a page that says:
 
 ![Screenshot (67)](https://github.com/user-attachments/assets/450d9d26-4ad4-42e3-adae-59719e0aa2b8)
 
+---
 <!-- ============================ -->
 <!-- START OF TAKE-HOME ASSIGNMENT -->
 <!-- ============================ -->
@@ -135,10 +136,12 @@ In this task, I had to build a basic two-tier architecture using AWS services. T
 - **day-one-sivanithin-webapp-sg**:
   - Allowed HTTP (port 80) from anywhere.
   - Allowed SSH (port 22) from my IP only.
+![Screenshot (84)](https://github.com/user-attachments/assets/1c7f06c5-ecae-48f2-a695-0c512fdd2684)
 
 - **day-one-sivanithin-database-sg**:
   - Allowed MySQL/Aurora (port 3306) only from the webapp-sg security group.
   - No internet access and no SSH allowed.
+![Screenshot (85)](https://github.com/user-attachments/assets/64753983-4b1f-4045-b5c2-7d933b794280)
 
 
 This ensures only the Web Server can communicate with the Database on port 3306, and the DB is completely private.
